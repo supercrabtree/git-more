@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git log --pretty=format:"%C(yellow)%h%Creset %<(10,trunc)%an %C(dim)%ad %Creset%<(50,trunc)%s" --date=format:%d/%m/%y
