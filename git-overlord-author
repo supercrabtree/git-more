@@ -6,9 +6,9 @@ num_authors=0
 while read author
 do
   if [ -z "$1" ]; then
-    res=$(git log --name-only --author="$author" --pretty=format: $(git ls-files) | sed '/^\s*$/d' | sort | uniq -c | sort -n)
+    res=$(git ls-files | xargs git log --name-only --author="$author" --pretty=format: | sed '/^\s*$/d' | sort | uniq -c | sort -n)
   else
-    res=$(git log --name-only --since="$1" --author="$author" --pretty=format: $(git ls-files) | sed '/^\s*$/d' | sort | uniq -c | sort -n)
+    res=$(git ls-files | xargs git log --name-only --since="$1" --author="$author" --pretty=format: | sed '/^\s*$/d' | sort | uniq -c | sort -n)
   fi
   if [ ! -z "$res" ]; then
     num_authors=$((num_authors+1))

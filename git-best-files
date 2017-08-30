@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+const exec = require('child_process').exec;
+const filename = process.argv[2];
+
+exec(`git log --numstat --pretty="%cn" -- ${filename}`, (error, stdout, stderr) => {
+    if (stderr) process.stderr.write(stderr);
+
+    const results = stdout.split('\n')
+        .filter(line => line !== '')
+        .reduce((res, val, i, arr) => {
+            if (i % 2 === 0) {
+                if (res[val]) {
+                    res[val].commits += 1;
+                } else {
+                    res[val] = { commits: 1, additions: 0, subtractions: 0 };
+                }
+            } else {
+                const match = val.match(/(^\d+)\s*(\d+)/);
+                res[arr[i-1]].additions += Number(match[1]);
+                res[arr[i-1]].subtractions += Number(match[2]);
+            }
+            return res;
+        }, {});
+
+    for (let authorName in results) {
+        const stats = results[authorName];
+        console.log(authorName);
+        console.log(`          commits: ${stats.commits}, additions: ${stats.additions}, subtractions: ${stats.subtractions}`);
+    }
+});
+
+//vim:ft=javascript

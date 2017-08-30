@@ -1,6 +1,6 @@
 #!/bin/sh
 
-git log --name-only --pretty=format: $(git ls-files) | sed '/^\s*$/d' | sort | uniq -c | sort -n
+git ls-files | xargs git log --name-only --pretty=format:
 
 echo
 echo "Above are the most important files in this repo, sorted by the number of commits."
